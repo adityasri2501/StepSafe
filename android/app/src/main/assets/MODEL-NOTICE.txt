@@ -1,0 +1,16 @@
+SafeStep includes object_detection_nanodet_2022nov.onnx from the OpenCV Zoo
+object_detection_nanodet model. Model: NanoDet-Plus 1.5x, 416 x 416, COCO
+classes. The OpenCV Zoo model directory states that its files are licensed
+under Apache License 2.0.
+
+Source model card:
+https://huggingface.co/opencv/object_detection_nanodet
+
+OpenCV Zoo source:
+https://github.com/opencv/opencv_zoo/tree/main/models/object_detection_nanodet
+
+Apache License 2.0:
+https://www.apache.org/licenses/LICENSE-2.0
+
+This model is a general-purpose object detector. It is not trained or
+validated as a certified assistive navigation or collision-avoidance system.

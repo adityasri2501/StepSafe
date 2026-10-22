@@ -1,0 +1,8 @@
+{
+  "name": "safestep-indoor-nav-poc",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node server.mjs" },
+  "dependencies": { "@github/copilot-sdk": "^1.0.19", "express": "^5.1.0" }
+}

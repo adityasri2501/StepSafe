@@ -1,0 +1,17 @@
+# Install dependencies from package-lock.json instead of committing native packages.
+/node_modules/
+/hvenv/
+
+# Android Studio / Gradle generated files and machine-local SDK configuration.
+**/.gradle/
+**/.idea/
+**/.kotlin/
+**/build/
+/android/local.properties
+
+# Zero-byte / command-output artifacts present in the local Android folder.
+/android/A
+/android/Get
+/android/Run
+/android/SDK
+/android/set

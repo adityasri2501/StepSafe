@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1e9">
+  <title>SafeStep — indoor audio navigation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brandmark">S</span><span>SafeStep<span class="brand-sub">INDOOR
+            GUIDE</span></span></div>
+      <div class="status"><i></i><span id="statusText">STARTING VOICE + CAMERA</span></div><button class="small-btn" id="voiceBtn" aria-label="Pause or resume hands-free voice mode">🎙 Voice mode</button><button class="icon-btn" id="soundBtn"
+        aria-label="Toggle speech" title="Toggle speech">◖</button>
+    </header>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">AUDIO-FIRST NAVIGATION</p>
+        <h1>Move with<br><em>confidence.</em></h1>
+        <p class="lede">Voice guidance and camera start on page load when browser permissions are allowed. Say a destination or command.</p>
+      </div>
+      <div class="mode-badge"><span>⌁</span> Indoor demo<br><small>BLE + voice + safety</small></div>
+    </section>
+    <section class="grid">
+      <div class="main-col">
+        <article class="card map-card">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">LIVE FLOOR MAP</p>
+              <h2>Home · Ground floor</h2>
+            </div><button id="locateBtn" class="small-btn">◎ Locate</button>
+          </div>
+          <div class="map-wrap" aria-label="Interactive demo floor map">
+            <svg id="floorMap" viewBox="0 0 720 390" role="img"
+              aria-label="Floor plan with entrance, hallway, living room, kitchen and library">
+              <rect x="12" y="12" width="696" height="366" rx="22" class="map-bg" />
+              <path class="wall"
+                d="M40 35H320V160H40z M400 35H680V160H400z M40 230H320V355H40z M400 230H680V355H400z M320 160H400V230H320z" />
+              <path class="corridor" d="M320 180H400V210H320z M180 160V230 M540 160V230" />
+              <path class="route-base" d="M355 195 L180 195 L180 98 L548 98" />
+              <path id="routeActive" class="route-active" d="M355 195 L180 195 L180 98 L548 98" />
+              <g class="roomlabel"><text x="180" y="78">LIVING ROOM</text><text x="540" y="78">KITCHEN</text><text
+                  x="180" y="273">BEDROOM</text><text x="540" y="273">LIBRARY</text><text x="360"
+                  y="151">HALLWAY</text><text x="360" y="238">ENTRANCE</text></g>
+              <g class="door">
+                <path
+                  d="M310 160v28a28 28 0 0 0 28-28 M400 160v28a28 28 0 0 1-28-28 M310 230v-28a28 28 0 0 1 28 28 M400 230v-28a28 28 0 0 0-28 28" />
+              </g>
+              <g id="markerKitchen" class="beacon">
+                <circle cx="548" cy="125" r="15" /><text x="548" y="130">K</text>
+              </g>
+              <g id="markerLibrary" class="beacon">
+                <circle cx="548" cy="300" r="15" /><text x="548" y="305">L</text>
+              </g>
+              <g id="currentDot" class="current-dot">
+                <circle cx="355" cy="195" r="10" />
+                <circle cx="355" cy="195" r="20" class="pulse" />
+              </g>
+              <text id="dotLabel" x="355" y="175" class="dot-label">YOU · APPROX.</text>
+            </svg>
+            <div class="map-legend"><span><i class="legend-dot you"></i>You · approximate</span><span><i
+                  class="legend-dot marker"></i>Phone marker</span></div>
+          </div>
+          <div class="map-foot"><span class="signal-icon">⌁</span><span id="locationStatus">Starting point not
+              confirmed</span><span class="live-pill"><i></i> LIVE</span></div>
+        </article>
+        <article class="card route-card">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">YOUR JOURNEY</p>
+              <h2>Choose a destination</h2>
+            </div><span class="step-count" id="stepCount">READY</span>
+          </div>
+          <div class="destinations" role="group" aria-label="Choose destination">
+            <button class="destination" data-dest="Kitchen"><span
+                class="dest-icon">⌂</span><span><b>Kitchen</b><small>Via main hallway · 3 turns</small></span><span
+                class="arrow">↗</span></button>
+            <button class="destination" data-dest="Library"><span
+                class="dest-icon">▤</span><span><b>Library</b><small>Via main hallway · 2 turns</small></span><span
+                class="arrow">↗</span></button>
+            <button class="destination" data-dest="Bedroom"><span
+                class="dest-icon">◒</span><span><b>Bedroom</b><small>Via living room · 2 turns</small></span><span
+                class="arrow">↗</span></button>
+          </div>
+          <div class="route-actions"><button id="startBtn" class="primary-btn" disabled>Hear route directions
+              <span>→</span></button><button id="repeatBtn" class="secondary-btn"
+              aria-label="Repeat last instruction">↻</button><button id="stopBtn" class="secondary-btn"
+              aria-label="Stop spoken directions">■</button></div>
+          <p class="instruction" id="instruction" aria-live="polite">Choose a destination to hear your route.</p>
+        </article>
+      </div>
+      <div class="side-col">
+        <article class="card copilot-card">
+          <div class="copilot-top">
+            <div class="copilot-icon">✳</div>
+            <div>
+              <p class="eyebrow">IN-APP ASSISTANT</p>
+              <h2>Copilot</h2>
+            </div><span id="copilotStatus" class="sdk-tag">SDK READY</span>
+          </div>
+          <p class="copilot-copy">Ask about this demo map or how to use the controls. Navigation routes are calculated
+            from the map, not generated by AI.</p>
+          <div id="chatLog" class="chat-log" aria-live="polite">
+            <div class="assistant-msg">Hi! I can help explain the map and demo controls. What would you like to know?
+            </div>
+          </div>
+          <form id="chatForm" class="chat-form"><input id="chatInput" aria-label="Ask Copilot"
+              placeholder="Ask Copilot…" maxlength="1500"><button aria-label="Send to Copilot">↑</button></form>
+          <p class="microcopy">Uses GitHub Copilot SDK when signed in · optional</p>
+        </article>
+        <article class="card tools-card">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">DEMO CONTROLS</p>
+              <h2>Try the sensors</h2>
+            </div>
+          </div>
+          <button id="bleBtn" class="tool-row"><span class="tool-icon">⌁</span><span><b>Scan Bluetooth markers</b><small
+                id="bleState">Bluetooth scan is off</small></span><span class="toggle"></span></button>
+          <div id="blePanel" class="ble-panel hidden">
+            <div class="ble-panel-head"><b>Nearby BLE devices</b><span id="bleCount">0 found</span></div>
+            <div id="bleDevices" class="ble-devices">
+              <p class="ble-empty">Tap Scan Bluetooth markers to request permission and discover nearby BLE
+                advertisements.</p>
+            </div>
+            <div class="ble-assigned" id="bleAssigned">Kitchen and Library marker slots are unassigned.</div>
+          </div>
+          <button id="cameraBtn" class="tool-row"><span class="tool-icon">◉</span><span><b>Camera preview</b><small
+                id="cameraState">Camera off</small></span><span class="toggle"></span></button>
+          <div id="cameraPanel" class="camera-panel hidden"><video id="cameraVideo" autoplay playsinline muted></video>
+            <div class="camera-overlay"><span id="obstacleCue">Waiting for detector…</span></div>
+          </div>
+          <button id="obstacleAlert" class="obstacle-alert hidden"><span>⚠</span><span><b>Obstacle nearby</b><small>Stop
+                and check your path</small></span><span class="vibe">〰</span></button>
+          <div class="note">Camera frames are processed on-device. Object size is only a rough proximity cue; this is not collision prevention.</div>
+        </article>
+        <article class="card emergency-card">
+          <div class="emergency-head"><span class="emergency-symbol">!</span>
+            <div>
+              <p class="eyebrow">SAFETY</p>
+              <h2>Emergency help</h2>
+            </div>
+          </div>
+          <p>Say <b>“I am in danger”</b> or start the demo alert.</p><label class="contact-label"
+            for="emergencyPhone">Emergency contact mobile number</label><input id="emergencyPhone" class="contact-input"
+            inputmode="tel" placeholder="Add contact number with country code"><button id="saveContact"
+            class="save-contact">Save contact on this device</button><button id="dangerBtn" class="danger-btn">I am in
+            danger</button>
+          <div class="emergency-status" id="emergencyStatus" aria-live="assertive">No alert active</div>
+          <p class="microcopy">Demo countdown opens an SMS draft; browser cannot send messages automatically.</p>
+        </article>
+      </div>
+    </section>
+    <footer><span>SAFESTEP · ACCESSIBILITY POC</span><span>Demonstration only · not a substitute for a cane, guide dog,
+        or tested assistive system</span></footer>
+  </main>
+  <div id="dangerDialog" class="dialog-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="dangerTitle">
+    <div class="dialog"><span class="dialog-mark">!</span>
+      <p class="eyebrow">EMERGENCY CHECK</p>
+      <h2 id="dangerTitle">Are you in danger?</h2>
+      <p>Confirm to prepare an alert to your emergency contact. If you do not answer within 30 seconds, the alert will
+        be prepared automatically.</p>
+      <div id="countdown" class="countdown">30</div><button id="confirmDanger" class="danger-btn">Yes, send alert
+        now</button><button id="cancelDanger" class="cancel-btn">No, cancel alert</button><small>SMS opens as a draft on
+        this demo. It will not be sent without user action.</small>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>
